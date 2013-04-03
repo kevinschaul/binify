@@ -35,16 +35,16 @@ def main():
         driver.DeleteDataSource(args.outfile)
 
     out_shapefile = driver.CreateDataSource(args.outfile)
-    out_layer = out_shapefile.CreateLayer('point_out', geom_type=ogr.wkbPolygon)
+    out_layer = out_shapefile.CreateLayer('grid', geom_type=ogr.wkbPolygon)
     field_defn = ogr.FieldDefn('id', ogr.OFTInteger)
     out_layer.CreateField(field_defn)
 
-    create_grid(out_layer, extent, 10, 10)
+    create_grid(out_layer, extent)
 
     in_shapefile.Destroy()
     out_shapefile.Destroy()
 
-def create_grid(layer, extent, num_x, num_y, *args, **kwargs):
+def create_grid(layer, extent, num_x=10, *args, **kwargs):
     """
     Creates a grid of hexagon features in `layer`.
     """
