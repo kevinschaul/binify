@@ -19,6 +19,9 @@ def parse_arguments():
             help='A point shapefile to create bins from.')
     parser.add_argument('outfile',
             help='A shapefile to write to. Will be created if it does not exist.')
+    parser.add_argument('-n', '--num-across', type=int, dest='num_across',
+            default=10,
+            help='Number of hexagons for the grid to have across (approximate)')
     return parser.parse_args()
 
 def main():
@@ -41,7 +44,7 @@ def main():
     field_defn = ogr.FieldDefn('COUNT', ogr.OFTInteger)
     out_layer.CreateField(field_defn)
 
-    create_grid(out_layer, extent, num_across=10)
+    create_grid(out_layer, extent, num_across=args.num_across)
     count_intersections(out_layer, in_layer)
 
     in_shapefile.Destroy()
