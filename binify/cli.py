@@ -44,7 +44,7 @@ def main():
     in_shapefile.Destroy()
     out_shapefile.Destroy()
 
-def create_grid(layer, extent, num_x=10, *args, **kwargs):
+def create_grid(layer, extent, num_across=10, *args, **kwargs):
     """
     Creates a grid of hexagon features in `layer`.
     """
@@ -52,19 +52,25 @@ def create_grid(layer, extent, num_x=10, *args, **kwargs):
     width = extent[1] - extent[0]
     height = extent[3] - extent[2]
 
-    scale_width = width / num_x
-    x = extent[0]
+    scale_width = width / num_across
 
-    # TODO
-    y = extent[2]
-    while x < extent[1]:
-        x += scale_width
-        hexagon = create_hexagon(x, y, scale_width)
-        feature = ogr.Feature(definition)
-        feature.SetGeometry(hexagon)
-        feature.SetField('id', 0)
-        layer.CreateFeature(feature)
-        feature.Destroy()
+    column = 0
+    y = extent[2] - scale_width
+    while y < extent[3] + scale_width:
+        x = extent[0] - scale_width
+        if column % 2 == 0:
+            x += 0.75 * scale_width
+        while x < extent[1] + scale_width:
+            hexagon = create_hexagon(x, y, scale_width)
+            feature = ogr.Feature(definition)
+            feature.SetGeometry(hexagon)
+            feature.SetField('id', 0)
+            layer.CreateFeature(feature)
+            feature.Destroy()
+            x += (1.5 * scale_width)
+        # TODO What is the math behind this value?
+        y += (0.61625 * scale_width)
+        column += 1
 
 def create_hexagon(center_x, center_y, scale, *args, **kwargs):
     """
