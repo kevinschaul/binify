@@ -52,8 +52,6 @@ def count_intersections(target, source, *args, **kwargs):
     Counts the number of points in `source` that intersect each polygon of
     `target`.
     """
-    count = 0
-
     another_point = True
     while (another_point):
         point = source.GetNextFeature()
@@ -70,12 +68,10 @@ def count_intersections(target, source, *args, **kwargs):
                         polygon.SetField('COUNT', count + 1)
                         target.SetFeature(polygon)
                     polygon.Destroy()
-                    break
                 else:
                     another_polygon = False
                     target.ResetReading()
             point.Destroy()
-            break
         else:
             another_point = False
             source.ResetReading()
