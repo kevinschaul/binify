@@ -23,7 +23,7 @@ setup(
     ],
     packages=[
         'binify',
-        'binify.binshapes',
+        'binify.shapegrids',
     ],
     entry_points = {
         'console_scripts': [

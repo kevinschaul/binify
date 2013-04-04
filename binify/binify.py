@@ -7,7 +7,7 @@ from osgeo import ogr
 from gdalconst import GA_ReadOnly
 
 import cli
-from binshapes import hexagon
+from shapegrids import hexagon
 
 class Binifier(object):
     """

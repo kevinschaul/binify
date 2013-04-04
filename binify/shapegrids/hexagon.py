@@ -4,7 +4,7 @@ import math
 
 from osgeo import ogr
 
-from binshape import ShapeGrid
+from shapegrid import ShapeGrid
 
 SQRT_3_DIV_4 = math.sqrt(3) / 4
 
