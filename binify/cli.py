@@ -8,6 +8,8 @@ import sys
 from osgeo import ogr
 from gdalconst import *
 
+SQRT_3_DIV_4 = math.sqrt(3) / 4
+
 def parse_arguments():
     """
     Implement command-line arguments
@@ -101,27 +103,26 @@ def create_grid(layer, extent, num_across=10, *args, **kwargs):
             layer.CreateFeature(feature)
             feature.Destroy()
             x += (1.5 * scale_width)
-        # TODO Is this value correct?
-        y += (0.61625 * scale_width)
+        y += SQRT_3_DIV_4 * scale_width
         column += 1
 
-def create_hexagon(center_x, center_y, scale, *args, **kwargs):
+def create_hexagon(center_x, center_y, width, *args, **kwargs):
     """
     Returns a hexagon geometry around the center point.
     """
-    h_val = math.sqrt(3) / 4
-    scale_quarter = scale / 4
-    scale_half = scale / 2
+    h_val = SQRT_3_DIV_4 * width
+    width_quarter = width / 4
+    width_half = width / 2
     ring = ogr.Geometry(ogr.wkbLinearRing)
 
     # Draw hexagon clockwise, beginning with northwest vertice
-    ring.AddPoint(center_x - scale_quarter, center_y + h_val)
-    ring.AddPoint(center_x + scale_quarter, center_y + h_val)
-    ring.AddPoint(center_x + scale_half, center_y)
-    ring.AddPoint(center_x + scale_quarter, center_y - h_val)
-    ring.AddPoint(center_x - scale_quarter, center_y - h_val)
-    ring.AddPoint(center_x - scale_half, center_y)
-    ring.AddPoint(center_x - scale_quarter, center_y + h_val)
+    ring.AddPoint(center_x - width_quarter, center_y + h_val)
+    ring.AddPoint(center_x + width_quarter, center_y + h_val)
+    ring.AddPoint(center_x + width_half, center_y)
+    ring.AddPoint(center_x + width_quarter, center_y - h_val)
+    ring.AddPoint(center_x - width_quarter, center_y - h_val)
+    ring.AddPoint(center_x - width_half, center_y)
+    ring.AddPoint(center_x - width_quarter, center_y + h_val)
 
     hexagon = ogr.Geometry(type=ogr.wkbPolygon)
     hexagon.AddGeometry(ring)
