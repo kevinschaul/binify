@@ -36,13 +36,47 @@ def main():
 
     out_shapefile = driver.CreateDataSource(args.outfile)
     out_layer = out_shapefile.CreateLayer('grid', geom_type=ogr.wkbPolygon)
-    field_defn = ogr.FieldDefn('id', ogr.OFTInteger)
+    field_defn = ogr.FieldDefn('COUNT', ogr.OFTInteger)
     out_layer.CreateField(field_defn)
 
-    create_grid(out_layer, extent)
+    create_grid(out_layer, extent, num_across=10)
+    count_intersections(out_layer, in_layer)
 
     in_shapefile.Destroy()
     out_shapefile.Destroy()
+
+def count_intersections(target, source, *args, **kwargs):
+    """
+    Counts the number of points in `source` that intersect each polygon of
+    `target`.
+    """
+    count = 0
+
+    another_point = True
+    while (another_point):
+        point = source.GetNextFeature()
+        if point:
+            point_geom = point.GetGeometryRef()
+            another_polygon = True
+            while (another_polygon):
+                polygon = target.GetNextFeature()
+                if polygon:
+                    poly_geom = polygon.GetGeometryRef()
+                    if point_geom.Intersects(poly_geom):
+                        # Intersection
+                        count = polygon.GetFieldAsInteger('COUNT')
+                        polygon.SetField('COUNT', count + 1)
+                        target.SetFeature(polygon)
+                    polygon.Destroy()
+                    break
+                else:
+                    another_polygon = False
+                    target.ResetReading()
+            point.Destroy()
+            break
+        else:
+            another_point = False
+            source.ResetReading()
 
 def create_grid(layer, extent, num_across=10, *args, **kwargs):
     """
@@ -51,7 +85,6 @@ def create_grid(layer, extent, num_across=10, *args, **kwargs):
     definition = layer.GetLayerDefn()
     width = extent[1] - extent[0]
     height = extent[3] - extent[2]
-
     scale_width = width / num_across
 
     column = 0
@@ -64,11 +97,11 @@ def create_grid(layer, extent, num_across=10, *args, **kwargs):
             hexagon = create_hexagon(x, y, scale_width)
             feature = ogr.Feature(definition)
             feature.SetGeometry(hexagon)
-            feature.SetField('id', 0)
+            feature.SetField('COUNT', 0)
             layer.CreateFeature(feature)
             feature.Destroy()
             x += (1.5 * scale_width)
-        # TODO What is the math behind this value?
+        # TODO Is this value correct?
         y += (0.61625 * scale_width)
         column += 1
 
