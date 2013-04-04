@@ -8,7 +8,7 @@ setup(
     author='Kevin Schaul',
     author_email='kevin.schaul@gmail.com',
     url='http://www.kevinschaul.com',
-    description='Create a binned shapefile from a point shapefile.',
+    description='A command-line tool to bin geospatial data.',
     long_description='Check out the project on GitHub for the latest information <http://github.com/kevinschaul/binify>',
     license='MIT',
     classifiers=[
@@ -23,10 +23,11 @@ setup(
     ],
     packages=[
         'binify',
+        'binify.binshapes',
     ],
     entry_points = {
         'console_scripts': [
-            'binify = binify.cli:main',
+            'binify = binify.binify:launch_new_instance',
         ],
     },
 )
