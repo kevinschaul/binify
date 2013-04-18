@@ -33,17 +33,22 @@ class Binifier(object):
         if in_shapefile is None:
             print('Could not open shapefile for read: %s' % filename)
             sys.exit(1)
+
         in_layer = in_shapefile.GetLayer()
-        extent = in_layer.GetExtent()
+        if not in_layer.GetGeomType() == ogr.wkbPoint and not self.args.force:
+            print('Input shapefile does not contain a point layer.')
+            print('To force computation, use the --ignore-type option.')
+            sys.exit(2)
 
         # If outfile exists and `--overwrite` is set, delete it first
         if os.path.exists(self.args.outfile):
             if not self.args.overwrite:
                 print('Output file exists. To overwrite, use the --overwrite \
 option.')
-                sys.exit(2)
+                sys.exit(3)
             driver.DeleteDataSource(self.args.outfile)
 
+        extent = in_layer.GetExtent()
         out_shapefile = driver.CreateDataSource(self.args.outfile)
         out_layer = out_shapefile.CreateLayer('grid', geom_type=ogr.wkbPolygon)
         field_defn = ogr.FieldDefn('COUNT', ogr.OFTInteger)

@@ -21,5 +21,7 @@ class CLI(object):
                 the grid to have across (approximate)')
         self.parser.add_argument('-o', '--overwrite', action='store_true', \
                 help='Overwrite output file.')
+        self.parser.add_argument('--ignore-type', action='store_true', \
+                help='Ignore the geometry type of the input shapefile.')
         return self.parser.parse_args()
 
