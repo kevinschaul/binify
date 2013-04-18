@@ -36,7 +36,8 @@ class Binifier(object):
             sys.exit(1)
 
         in_layer = in_shapefile.GetLayer()
-        if not in_layer.GetGeomType() == ogr.wkbPoint and not self.args.force:
+        if not in_layer.GetGeomType() == ogr.wkbPoint \
+                and not self.args.ignore_type:
             print('Input shapefile does not contain a point layer.')
             print('To force computation, use the --ignore-type option.')
             sys.exit(2)

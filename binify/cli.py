@@ -22,6 +22,7 @@ class CLI(object):
         self.parser.add_argument('-o', '--overwrite', action='store_true', \
                 help='Overwrite output file.')
         self.parser.add_argument('--ignore-type', action='store_true', \
-                help='Ignore the geometry type of the input shapefile.')
+                dest='ignore_type', help='Ignore the geometry type of the \
+                input shapefile.')
         return self.parser.parse_args()
 
