@@ -36,8 +36,12 @@ class Binifier(object):
         in_layer = in_shapefile.GetLayer()
         extent = in_layer.GetExtent()
 
-        # If outfile exists, delete it first
+        # If outfile exists and `--overwrite` is set, delete it first
         if os.path.exists(self.args.outfile):
+            if not self.args.overwrite:
+                print('Output file exists. To overwrite, use the --overwrite \
+option.')
+                sys.exit(2)
             driver.DeleteDataSource(self.args.outfile)
 
         out_shapefile = driver.CreateDataSource(self.args.outfile)

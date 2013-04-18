@@ -19,5 +19,7 @@ class CLI(object):
         self.parser.add_argument('-n', '--num-across', type=int,
                 dest='num_across', default=10, help='Number of hexagons for \
                 the grid to have across (approximate)')
+        self.parser.add_argument('-o', '--overwrite', action='store_true', \
+                help='Overwrite output file.')
         return self.parser.parse_args()
 
