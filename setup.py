@@ -30,5 +30,8 @@ setup(
             'binify = binify.binify:launch_new_instance',
         ],
     },
+    install_requires = [
+        'progressbar>=2.3',
+    ],
 )
 

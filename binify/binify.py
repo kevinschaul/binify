@@ -3,8 +3,9 @@
 import os
 import sys
 
-from osgeo import ogr
 from gdalconst import GA_ReadOnly
+from osgeo import ogr
+import progressbar
 
 import cli
 from shapegrids import hexagon
@@ -66,6 +67,19 @@ option.')
         Counts the number of points in `source` that intersect each polygon of
         `target`.
         """
+        # Set up progress bar
+        num_points = source.GetFeatureCount()
+        pbar = progressbar.ProgressBar(
+            widgets=[
+                'Binning: ',
+                progressbar.Percentage(),
+                progressbar.Bar()
+            ],
+            maxval=num_points
+        )
+        pbar.start()
+
+        pbar_count = 0
         another_point = True
         while (another_point):
             point = source.GetNextFeature()
@@ -89,6 +103,10 @@ option.')
             else:
                 another_point = False
                 source.ResetReading()
+            # Update progress bar
+            pbar.update(pbar_count)
+            pbar_count = pbar_count + 1
+        pbar.finish()
 
 def launch_new_instance():
     """
