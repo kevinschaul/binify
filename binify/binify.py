@@ -4,7 +4,7 @@ import os
 import sys
 
 from gdalconst import GA_ReadOnly
-from osgeo import ogr
+from osgeo import ogr, osr
 import progressbar
 
 import cli
@@ -50,12 +50,17 @@ option.')
                 sys.exit(3)
             driver.DeleteDataSource(self.args.outfile)
 
-        extent = in_layer.GetExtent()
         out_shapefile = driver.CreateDataSource(self.args.outfile)
         out_layer = out_shapefile.CreateLayer('grid', geom_type=ogr.wkbPolygon)
         field_defn = ogr.FieldDefn('COUNT', ogr.OFTInteger)
         out_layer.CreateField(field_defn)
 
+        # Write .prj file for output shapefile
+        spatial_ref = in_layer.GetSpatialRef()
+        with open(self.args.outfile[:-4] + '.prj', 'w') as proj_file:
+            proj_file.write(spatial_ref.ExportToWkt())
+
+        extent = in_layer.GetExtent()
         self.grid.create_grid(out_layer, extent,
                 num_across=self.args.num_across)
         self.count_intersections(out_layer, in_layer)
