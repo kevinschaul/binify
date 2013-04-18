@@ -31,6 +31,7 @@ setup(
         ],
     },
     install_requires = [
+        'gdal>=1.9.1',
         'progressbar>=2.3',
     ],
 )
