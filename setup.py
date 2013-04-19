@@ -8,7 +8,7 @@ setup(
     author='Kevin Schaul',
     author_email='kevin.schaul@gmail.com',
     url='http://www.kevinschaul.com',
-    description='A command-line tool to bin geospatial data.',
+    description='A command-line tool to better visualize crowded dot density maps.',
     long_description='Check out the project on GitHub for the latest information <http://github.com/kevinschaul/binify>',
     license='MIT',
     classifiers=[
