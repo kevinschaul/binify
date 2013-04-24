@@ -34,5 +34,6 @@ setup(
         'gdal>=1.9.1',
         'progressbar>=2.3',
     ],
+    test_suite = 'tests.test_binify',
 )
 
