@@ -18,6 +18,18 @@ Binify is available in the Python Package Index. I recommend using a virtual env
     $ mkvirtualenv binify
     $ pip install binify
 
+Node: This installation assumes GDAL is already installed.
+To install GDAL with python bindings:
+
+OS X:
+Try the precompiled biniaries by [KyngChaos](http://www.kyngchaos.com/software/frameworks).
+
+Ubuntu:
+    
+    $ sudo apt-add-repository ppa:ubuntugis/ppa
+    $ sudo apt-get update
+    $ sudo apt-get install python-gdal
+
 Usage
 -----
 
