@@ -32,7 +32,7 @@ class Binifier(object):
         driver = ogr.GetDriverByName('ESRI Shapefile')
         in_shapefile = driver.Open(self.args.infile, GA_ReadOnly)
         if in_shapefile is None:
-            print('Could not open shapefile for read: %s' % filename)
+            print('Could not open shapefile for read: %s' % self.args.infile)
             sys.exit(1)
 
         in_layer = in_shapefile.GetLayer()
