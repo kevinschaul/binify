@@ -7,7 +7,7 @@ class CLI(object):
     Handles command-line interface options
     """
 
-    def parse_arguments(self, *args, **kwargs):
+    def parse_arguments(self, args=None):
         """
         Implement command-line arguments
         """
@@ -24,5 +24,8 @@ class CLI(object):
         self.parser.add_argument('--ignore-type', action='store_true', \
                 dest='ignore_type', help='Ignore the geometry type of the \
                 input shapefile.')
-        return self.parser.parse_args()
+        self.parser.add_argument('--suppress-output', action='store_true', \
+                dest='suppress_output', help='Supress console output \
+                (excluding any warnings).')
+        return self.parser.parse_args(args)
 

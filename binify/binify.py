@@ -15,13 +15,13 @@ class Binifier(object):
     Main binify logic.
     """
 
-    def __init__(self):
+    def __init__(self, args=None):
         """
         Get the options from cli or another source (in the future), and
         instantiate a ShapeGrid object.
         """
         self.cli = cli.CLI()
-        self.args = self.cli.parse_arguments()
+        self.args = self.cli.parse_arguments(args)
         self.grid = hexagon.HexagonGrid()
 
     def main(self):
@@ -75,15 +75,16 @@ option.')
         """
         # Set up progress bar
         num_points = source.GetFeatureCount()
-        pbar = progressbar.ProgressBar(
-            widgets=[
-                'Binning: ',
-                progressbar.Percentage(),
-                progressbar.Bar()
-            ],
-            maxval=num_points
-        )
-        pbar.start()
+        if not self.args.suppress_output:
+            pbar = progressbar.ProgressBar(
+                widgets=[
+                    'Binning: ',
+                    progressbar.Percentage(),
+                    progressbar.Bar()
+                ],
+                maxval=num_points
+            )
+            pbar.start()
 
         pbar_count = 0
         another_point = True
@@ -109,10 +110,12 @@ option.')
             else:
                 another_point = False
                 source.ResetReading()
-            # Update progress bar
-            pbar.update(pbar_count)
-            pbar_count = pbar_count + 1
-        pbar.finish()
+            if not self.args.suppress_output:
+                # Update progress bar
+                pbar.update(pbar_count)
+                pbar_count = pbar_count + 1
+        if not self.args.suppress_output:
+            pbar.finish()
 
 def launch_new_instance():
     """
