@@ -20,15 +20,14 @@ class TestBinify(unittest.TestCase):
         self.b.main()
 
         self.driver = ogr.GetDriverByName('ESRI Shapefile')
-        self.in_shapefile = self.driver.Open(
+        self.out_shapefile = self.driver.Open(
             'tests/test-shapefiles/simple-points-grid.shp',
             GA_ReadOnly
         )
-        self.in_layer = self.in_shapefile.GetLayer()
+        self.out_layer = self.out_shapefile.GetLayer()
 
-    def test_simple(self):
-        extent = self.in_layer.GetExtent()
-
+    def test_extent(self):
+        extent = self.out_layer.GetExtent()
         self.assertEqual(extent, (
             -0.7789222489017765,
             -0.03954617630398981,
@@ -36,6 +35,17 @@ class TestBinify(unittest.TestCase):
             0.1998517180083852)
         )
 
+    def test_count(self):
+        count = 0
+        another_feature = True
+        while (another_feature):
+            feature = self.out_layer.GetNextFeature()
+            if feature:
+                count += feature.GetFieldAsInteger('COUNT')
+            else:
+                another_feature = False
+        self.assertEqual(count, 10)
+
     def tearDown(self):
-        self.in_shapefile.Destroy()
+        self.out_shapefile.Destroy()
  
