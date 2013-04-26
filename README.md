@@ -50,6 +50,7 @@ To view options for your installed version of Binify, use the help flag.
                             (approximate)
       -o, --overwrite       Overwrite output file.
       --ignore-type         Ignore the geometry type of the input shapefile.
+      --suppress-output     Supress console output (excluding any warnings).
 
 A basic execution may look like this:
 
