@@ -35,4 +35,7 @@ class TestBinify(unittest.TestCase):
             -0.3489926778373724,
             0.1998517180083852)
         )
+
+    def tearDown(self):
+        self.in_shapefile.Destroy()
  
