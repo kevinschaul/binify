@@ -65,6 +65,9 @@ option.')
                 num_across=self.args.num_across)
         self.count_intersections(out_layer, in_layer)
 
+        if self.args.exclude_empty:
+            self.remove_empty_shapes(out_layer)
+
         in_shapefile.Destroy()
         out_shapefile.Destroy()
 
@@ -116,6 +119,24 @@ option.')
                 pbar_count = pbar_count + 1
         if not self.args.suppress_output:
             pbar.finish()
+
+    def remove_empty_shapes(self, target):
+        """
+        Remove any shapes that ended up binning zero points.
+        """
+        another_polygon = True
+        while (another_polygon):
+            polygon = target.GetNextFeature()
+            if polygon:
+                count = polygon.GetFieldAsInteger('COUNT')
+                if count == 0:
+                    # TODO does deleting a polygon affect looping over the features?
+                    target.DeleteFeature(polygon.GetFID())
+                target.SetFeature(polygon)
+                polygon.Destroy()
+            else:
+                another_polygon = False
+                target.ResetReading()
 
 def launch_new_instance():
     """

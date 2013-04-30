@@ -48,4 +48,4 @@ class TestBinify(unittest.TestCase):
 
     def tearDown(self):
         self.out_shapefile.Destroy()
- 
+
