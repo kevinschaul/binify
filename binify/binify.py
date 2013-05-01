@@ -130,7 +130,6 @@ option.')
             if polygon:
                 count = polygon.GetFieldAsInteger('COUNT')
                 if count == 0:
-                    # TODO does deleting a polygon affect looping over the features?
                     target.DeleteFeature(polygon.GetFID())
                 target.SetFeature(polygon)
                 polygon.Destroy()

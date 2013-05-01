@@ -7,7 +7,7 @@ from osgeo import ogr, osr
 
 from binify.binify import Binifier
 
-class TestBinify(unittest.TestCase):
+class TestBinifySimple(unittest.TestCase):
 
     def setUp(self):
         self.args = [
@@ -46,6 +46,47 @@ class TestBinify(unittest.TestCase):
                 another_feature = False
         self.assertEqual(count, 10)
 
+    def test_feature_count(self):
+        self.assertEqual(self.out_layer.GetFeatureCount(), 160)
+
+    def tearDown(self):
+        self.out_shapefile.Destroy()
+
+class TestBinifyExcludeEmpty(unittest.TestCase):
+
+    def setUp(self):
+        self.args = [
+            'tests/test-shapefiles/simple-points.shp',
+            'tests/test-shapefiles/simple-points-grid-empty.shp',
+            '--exclude-empty',
+            '--overwrite',
+            '--suppress-output',
+        ]
+        self.b = Binifier(self.args)
+        self.b.main()
+
+        self.driver = ogr.GetDriverByName('ESRI Shapefile')
+        self.out_shapefile = self.driver.Open(
+            'tests/test-shapefiles/simple-points-grid-empty.shp',
+            GA_ReadOnly
+        )
+        self.out_layer = self.out_shapefile.GetLayer()
+
+    def test_feature_count(self):
+        # We must loop because features are marked for deletion, but are still
+        # considered in layer.GetFeatureCount()
+        count = 0
+        another_feature = True
+        while (another_feature):
+            feature = self.out_layer.GetNextFeature()
+            if feature:
+                count += 1
+                feature.Destroy()
+            else:
+                another_feature = False
+                self.out_layer.ResetReading()
+        self.assertEqual(count, 7)
+ 
     def tearDown(self):
         self.out_shapefile.Destroy()
 
