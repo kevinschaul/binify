@@ -3,8 +3,13 @@
 import os
 import sys
 
-from gdalconst import GA_ReadOnly
-from osgeo import ogr, osr
+try:
+    from osgeo.gdalconst import GA_ReadOnly
+    from osgeo import ogr, osr
+except ImportError:
+    from gdalconst import GA_ReadOnly
+    import ogr, osr
+
 import progressbar
 
 import cli
