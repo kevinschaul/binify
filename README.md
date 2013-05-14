@@ -10,6 +10,11 @@ Have an idea? Open up an [issue](https://github.com/kevinschaul/binify/issues).
 
 ![ScreenShot](http://www.kevinschaul.com/wp-content/uploads/2013/04/binify-before-after.png)
 
+In the wild
+-----------
+
+- [Binify + D3 = Gorgeous honeycomb maps](http://mechanicalscribe.com/notes/binify-d3-topojson-tutorial/) - [Chris Wilson](http://mechanicalscribe.com/)
+
 Installation
 ------------
 
