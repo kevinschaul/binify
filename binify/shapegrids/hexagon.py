@@ -2,7 +2,10 @@
 
 import math
 
-from osgeo import ogr
+try:
+    from osgeo import ogr
+except ImportError:
+    import ogr
 
 from shapegrid import ShapeGrid
 
