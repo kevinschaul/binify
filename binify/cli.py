@@ -24,6 +24,10 @@ class CLI(object):
                 help='Exclude shapes that end up binning zero points.')
         self.parser.add_argument('-o', '--overwrite', action='store_true', \
                 help='Overwrite output file.')
+        # TODO help for --acumulate
+        self.parser.add_argument('--accumulate', nargs=2, \
+                metavar=('ACCUMULATE_TYPE', 'ACCUMULATE_FIELD'), \
+                dest='accumulate', help='TODO')
         self.parser.add_argument('--ignore-type', action='store_true', \
                 dest='ignore_type', help='Ignore the geometry type of the \
                 input shapefile.')
