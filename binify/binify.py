@@ -121,18 +121,24 @@ option.')
         s = sorted(polygons, key=lambda poly: poly[1][0][0])
         polygons_sorted = sorted(s, key=lambda poly: poly[1][0][1])
 
-        print self.rows
-        print self.columns
+        polygons_2d = []
+        for i in range(0, self.rows * 2 + 1):
+            polygons_2d.append(polygons_sorted[i * self.columns:(i * self.columns) + self.columns])
+
+        print polygons_2d[0]
+        print polygons_2d[1]
+        print polygons_2d[2]
+        print polygons_2d[3]
+        print polygons_2d[4]
+        print polygons_2d[5]
+        print polygons_2d[6]
         
         target_extent = target.GetExtent()
-        print target_extent
         target_width = target_extent[1] - target_extent[0]
+        # TODO columns or rows?
         array_index_width = target_width / self.columns
-
         target_height = target_extent[3] - target_extent[2]
-
-        print target_width
-        print array_index_width
+        array_index_height = target_height / self.rows
 
         another_point = True
         while (another_point):
@@ -144,6 +150,21 @@ option.')
 
                 first_index = int(math.floor((point_points[0] - target_extent[0]) / array_index_width))
                 print first_index
+
+                second_index = int(math.floor((target_extent[3] - point_points[1]) / array_index_height))
+                print second_index
+
+                print ''
+                poly_info = polygons_2d[first_index][second_index]
+                print poly_info
+                poly = target.GetFeature(poly_info[0])
+                poly_geom = poly.GetGeometryRef()
+                print poly_geom
+                if point_geom.Intersects(poly_geom):
+                    print 'intersection'
+                else:
+                    print 'no intersection'
+                print ''
 
             else:
                 another_point = False
