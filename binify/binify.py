@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import math
 import os
 import sys
 
@@ -66,7 +67,7 @@ option.')
             proj_file.write(spatial_ref.ExportToWkt())
 
         extent = in_layer.GetExtent()
-        self.grid.create_grid(out_layer, extent,
+        self.rows, self.columns = self.grid.create_grid(out_layer, extent,
                 num_across=self.args.num_across)
         self.count_intersections(out_layer, in_layer)
 
@@ -81,49 +82,72 @@ option.')
         Counts the number of points in `source` that intersect each polygon of
         `target`.
         """
-        # Set up progress bar
-        num_points = source.GetFeatureCount()
-        if not self.args.suppress_output:
-            pbar = progressbar.ProgressBar(
-                widgets=[
-                    'Binning: ',
-                    progressbar.Percentage(),
-                    progressbar.Bar()
-                ],
-                maxval=num_points
-            )
-            pbar.start()
 
-        pbar_count = 0
+        # TODO add this code back
+        # Set up progress bar
+
+        polygons = []
+
+        another_polygon = True
+        while (another_polygon):
+            polygon = target.GetNextFeature()
+            if polygon:
+                poly_geom = polygon.GetGeometryRef()
+                poly_points = poly_geom.Boundary().GetPoints()
+                # TODO This is very hexagon-specific
+                poly_extent = (
+                    (
+                        poly_points[5][0], # West extent
+                        poly_points[0][1], # North extent
+                    ),
+                    (
+                        poly_points[2][0], # East extent
+                        poly_points[3][1], # South extent
+                    ),
+                )
+                print poly_extent
+                print ''
+                polygons.append([
+                    polygon.GetFID(),
+                    poly_extent,
+                ])
+                polygon.Destroy()
+            else:
+                another_polygon = False
+                target.ResetReading()
+        print polygons
+        print ''
+        # TODO Is this sorting necessary, if we know the order we created the shapes in?
+        s = sorted(polygons, key=lambda poly: poly[1][0][0])
+        polygons_sorted = sorted(s, key=lambda poly: poly[1][0][1])
+
+        print self.rows
+        print self.columns
+        
+        target_extent = target.GetExtent()
+        print target_extent
+        target_width = target_extent[1] - target_extent[0]
+        array_index_width = target_width / self.columns
+
+        target_height = target_extent[3] - target_extent[2]
+
+        print target_width
+        print array_index_width
+
         another_point = True
         while (another_point):
             point = source.GetNextFeature()
             if point:
                 point_geom = point.GetGeometryRef()
-                another_polygon = True
-                while (another_polygon):
-                    polygon = target.GetNextFeature()
-                    if polygon:
-                        poly_geom = polygon.GetGeometryRef()
-                        if point_geom.Intersects(poly_geom):
-                            # Intersection
-                            count = polygon.GetFieldAsInteger('COUNT')
-                            polygon.SetField('COUNT', count + 1)
-                            target.SetFeature(polygon)
-                        polygon.Destroy()
-                    else:
-                        another_polygon = False
-                        target.ResetReading()
-                point.Destroy()
+                point_points = point_geom.GetPoint_2D()
+                print point_points
+
+                first_index = int(math.floor((point_points[0] - target_extent[0]) / array_index_width))
+                print first_index
+
             else:
                 another_point = False
                 source.ResetReading()
-            if not self.args.suppress_output:
-                # Update progress bar
-                pbar.update(pbar_count)
-                pbar_count = pbar_count + 1
-        if not self.args.suppress_output:
-            pbar.finish()
 
     def remove_empty_shapes(self, target):
         """
