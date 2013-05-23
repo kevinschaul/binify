@@ -13,7 +13,8 @@ Have an idea? Open up an [issue](https://github.com/kevinschaul/binify/issues).
 In the wild
 -----------
 
-- [Binify + D3 = Gorgeous honeycomb maps](http://mechanicalscribe.com/notes/binify-d3-topojson-tutorial/) - [Chris Wilson](http://mechanicalscribe.com/)
+- [Binify + D3 = Gorgeous honeycomb maps](http://mechanicalscribe.com/notes/binify-d3-topojson-tutorial/) - Chris Wilson, Mechanical Scribe
+- [The Drone War: A Comprehesive Map of Lethal U.S. Attacks](http://www.businessweek.com/articles/2013-05-23/the-drone-war-a-comprehensive-map-of-lethal-u-dot-s-dot-attacks) - Allsion McCann, Bloomberg Businessweek
 
 Installation
 ------------
