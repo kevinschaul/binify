@@ -105,8 +105,6 @@ option.')
                         poly_points[3][1], # South extent
                     ),
                 )
-                print poly_extent
-                print ''
                 polygons.append([
                     polygon.GetFID(),
                     poly_extent,
@@ -115,28 +113,24 @@ option.')
             else:
                 another_polygon = False
                 target.ResetReading()
-        print polygons
-        print ''
-        # TODO Is this sorting necessary, if we know the order we created the shapes in?
+
+        # Sort from top to bottom, and then (primarily) by left to right
         s = sorted(polygons, key=lambda poly: poly[1][0][0])
-        polygons_sorted = sorted(s, key=lambda poly: poly[1][0][1])
+        polygons_sorted = sorted(s, key=lambda poly: 0 - poly[1][0][1])
 
-        polygons_2d = []
-        for i in range(0, self.rows * 2 + 1):
-            polygons_2d.append(polygons_sorted[i * self.columns:(i * self.columns) + self.columns])
+        # TODO fix this in column counting
+        #self.columns = self.columns * 2
+        self.columns = 6
+        self.rows = 8
+        print ''
+        print self.columns
+        print self.rows
+        print ''
 
-        print polygons_2d[0]
-        print polygons_2d[1]
-        print polygons_2d[2]
-        print polygons_2d[3]
-        print polygons_2d[4]
-        print polygons_2d[5]
-        print polygons_2d[6]
-        
         target_extent = target.GetExtent()
         target_width = target_extent[1] - target_extent[0]
-        # TODO columns or rows?
         array_index_width = target_width / self.columns
+
         target_height = target_extent[3] - target_extent[2]
         array_index_height = target_height / self.rows
 
@@ -146,25 +140,41 @@ option.')
             if point:
                 point_geom = point.GetGeometryRef()
                 point_points = point_geom.GetPoint_2D()
-                print point_points
 
                 first_index = int(math.floor((point_points[0] - target_extent[0]) / array_index_width))
-                print first_index
 
                 second_index = int(math.floor((target_extent[3] - point_points[1]) / array_index_height))
-                print second_index
 
-                print ''
-                poly_info = polygons_2d[first_index][second_index]
-                print poly_info
-                poly = target.GetFeature(poly_info[0])
-                poly_geom = poly.GetGeometryRef()
-                print poly_geom
-                if point_geom.Intersects(poly_geom):
-                    print 'intersection'
-                else:
-                    print 'no intersection'
-                print ''
+                index = (3 * second_index) + (first_index / 2)
+                fid = polygons_sorted[index][0]
+                print fid
+                
+                # `strict_columns` is the number of polygons in each strict
+                # column (i.e. considering offset polygons their own column)
+                strict_columns = self.columns / 2
+
+                # The intersection does not necessarily occur in that polygon,
+                # so we'll also check the surrounding polygons.
+                fids_to_check = []
+                fids_to_check.append(fid)
+                fids_to_check.append(fid + strict_columns)
+                fids_to_check.append(fid + strict_columns - 1)
+                fids_to_check.append(fid - strict_columns)
+                fids_to_check.append(fid - strict_columns - 1)
+
+                for fid in fids_to_check:
+                    if fid >= 0 and fid <= len(polygons_sorted) - 1:
+                        poly = target.GetFeature(fid)
+                        if poly:
+                            poly_geom = poly.GetGeometryRef()
+                            print poly_geom
+                            if point_geom.Intersects(poly_geom):
+                                print 'intersection!'
+                                print ''
+                                break
+                            else:
+                                print 'no intersection'
+                            print ''
 
             else:
                 another_point = False
