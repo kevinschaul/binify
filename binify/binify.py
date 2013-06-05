@@ -67,7 +67,7 @@ option.')
             proj_file.write(spatial_ref.ExportToWkt())
 
         extent = in_layer.GetExtent()
-        self.rows, self.columns = self.grid.create_grid(out_layer, extent,
+        self.columns, self.rows = self.grid.create_grid(out_layer, extent,
                 num_across=self.args.num_across)
         self.count_intersections(out_layer, in_layer)
 
@@ -120,8 +120,6 @@ option.')
 
         # TODO fix this in column counting
         #self.columns = self.columns * 2
-        self.columns = 6
-        self.rows = 8
         print ''
         print self.columns
         print self.rows
@@ -171,10 +169,14 @@ option.')
                             if point_geom.Intersects(poly_geom):
                                 print 'intersection!'
                                 print ''
+                                count = poly.GetFieldAsInteger('COUNT')
+                                poly.SetField('COUNT', count + 1)
+                                target.SetFeature(poly)
                                 break
                             else:
                                 print 'no intersection'
                             print ''
+                            poly.Destroy()
 
             else:
                 another_point = False

@@ -30,9 +30,9 @@ class HexagonGrid(ShapeGrid):
         y = extent[2] - scale_width
         while y < extent[3] + scale_width:
             x = extent[0] - scale_width
-            if column % 2 == 0:
+            if row % 2 == 0:
                 x += 0.75 * scale_width
-            row = 0
+            column = 0
             while x < extent[1] + scale_width:
                 hexagon = self.create_hexagon(x, y, scale_width)
                 feature = ogr.Feature(definition)
@@ -41,11 +41,11 @@ class HexagonGrid(ShapeGrid):
                 layer.CreateFeature(feature)
                 feature.Destroy()
                 x += (1.5 * scale_width)
-                row += 1
+                column += 1
             y += SQRT_3_DIV_4 * scale_width
-            column += 1
+            row += 1
         # TODO Test column count edge cases
-        return row, column / 2
+        return column * 2, row
 
     def create_hexagon(self, center_x, center_y, width):
         """
