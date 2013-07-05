@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='binify',
-    version='0.1.5',
+    version='0.1.6',
     author='Kevin Schaul',
     author_email='kevin.schaul@gmail.com',
     url='http://www.kevinschaul.com',
