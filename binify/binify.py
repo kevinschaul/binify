@@ -65,7 +65,11 @@ option.')
         with open(self.args.outfile[:-4] + '.prj', 'w') as proj_file:
             proj_file.write(spatial_ref.ExportToWkt())
 
-        extent = in_layer.GetExtent()
+        if self.args.extent:
+          extent = self.args.extent
+        else:
+          extent = in_layer.GetExtent()
+
         self.grid.create_grid(out_layer, extent,
                 num_across=self.args.num_across)
         self.count_intersections(out_layer, in_layer)

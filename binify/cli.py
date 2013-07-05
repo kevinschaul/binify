@@ -19,6 +19,9 @@ class CLI(object):
         self.parser.add_argument('-n', '--num-across', type=int,
                 dest='num_across', default=10, help='Number of hexagons for \
                 the grid to have across (approximate)')
+        self.parser.add_argument('-E', '--extent', nargs=4, type=float, \
+                metavar=('EAST_LNG', 'WEST_LNG', 'SOUTH_LAT', 'NORTH_LAT'),
+                help='Use a custom extent.')
         self.parser.add_argument('-e', '--exclude-empty', \
                 dest='exclude_empty', action='store_true', \
                 help='Exclude shapes that end up binning zero points.')

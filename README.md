@@ -54,6 +54,8 @@ To view options for your installed version of Binify, use the help flag.
       -n NUM_ACROSS, --num-across NUM_ACROSS
                             Number of hexagons for the grid to have across
                             (approximate)
+      -E EAST_LNG WEST_LNG SOUTH_LAT NORTH_LAT, --extent EAST_LNG WEST_LNG SOUTH_LAT NORTH_LAT
+                            Use a custom extent.
       -e, --exclude-empty   Exclude shapes that end up binning zero points.
       -o, --overwrite       Overwrite output file.
       --ignore-type         Ignore the geometry type of the input shapefile.
