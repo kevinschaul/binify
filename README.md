@@ -2,13 +2,13 @@ Binify
 ======
 A command-line tool to better visualize crowded dot density maps.
 
-Don't miss the [introductory blog post](http://www.kevinschaul.com/2013/04/18/introducing-binify/).
+Don't miss the [introductory blog post](http://kevin.schaul.io/2013/04/18/introducing-binify/).
 
 Developed as part of a visualization course at the University of Minnesota.
 
 Have an idea? Open up an [issue](https://github.com/kevinschaul/binify/issues).
 
-![ScreenShot](http://www.kevinschaul.com/wp-content/uploads/2013/04/binify-before-after.png)
+![ScreenShot](http://kevin.schaul.io/assets/posts/2013-04-19-introducing-binify/binify-before-after.png)
 
 In the wild
 -----------
