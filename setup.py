@@ -31,7 +31,7 @@ setup(
         ],
     },
     install_requires = [
-        'progressbar>=2.3',
+        'progressbar>=2.2',
     ],
     test_suite = 'tests.test_binify',
 )
